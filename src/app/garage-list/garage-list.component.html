@@ -1,1 +1,75 @@
-<p>garage-list works!</p>
+<div class="m-4">
+    <button type="button" class="btn btn-success" routerLink="/garage/new">
+      Add new garage
+    </button>
+  </div>
+  
+  <form #formFilters="ngForm" (ngSubmit)="applyFilters()">
+    <table class="table table-dark">
+      <thead>
+      <tr>
+        <th scope="col">iD</th>
+        <th scope="col">Garage Name</th>
+        <th scope="col">Adress</th>
+        <th scope="col">Street Name</th>
+        <th scope="col">Street complement</th>
+        <th scope="col">City</th>
+      </tr>
+  
+      <tr>
+        <td></td>
+        <td>
+          <div class="form-group">
+            <input type="text" class="form-control" [(ngModel)]="filters.name" name="name">
+          </div>
+        </td>
+        <td></td>
+        <td>
+          <div class="form-group">
+            <input type="text" class="form-control" [(ngModel)]="filters.city" name="city">
+          </div>
+        </td>
+        <td>
+          <button type="submit" class="btn btn-success">
+            Search
+          </button>
+        </td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let garage of garages">
+        <td>{{ garage.id }}</td>
+                <td>{{ garage.name }}</td>
+                <td>{{garage.street}}</td>
+                <td>{{ garage.streetComplement }}</td>
+                <td>{{garage.postalCode}}</td>
+                <td>{{garage.city}}</td>
+                <td>{{garage.owner}}</td>
+          <td><button type="button" class="btn btn-sm btn-secondary" [routerLink]="['/garage-modif', garage.id]">
+            Edit
+            </button>
+          </td>
+      </tr>
+      </tbody>
+    </table>
+  </form>
+  
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li *ngIf="prevLink !== null" class="page-item">
+        <a class="page-link" (click)="loadPreviousPage()">
+          Previous
+        </a>
+      </li>
+  
+      <li *ngFor="let page of getPageNumbers" class="page-item">
+        <a class="page-link" (click)="loadPageByNumber(page)">{{ page }}</a>
+      </li>
+  
+      <li *ngIf="nextLink !== null" class="page-item">
+        <a class="page-link" (click)="loadNextPage()">
+          Next
+        </a>
+      </li>
+    </ul>
+  </nav>

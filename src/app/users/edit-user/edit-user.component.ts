@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {GarageJsonld} from '../models/garage-jsonld';
-import {Garage} from '../models/garage';
-import {ConstraintViolationList} from '../models/constraint-violation-list';
+import {UserJsonld} from '../../models/user-jsonld';
+import {User} from '../../models/user';
+import {ConstraintViolationList} from '../../models/constraint-violation-list';
 
 @Component({
-  selector: 'app-garage-modify',
-  templateUrl: './garage-modify.component.html',
-  styleUrls: ['./garage-modify.component.scss']
+  selector: 'app-edit-user',
+  templateUrl: './edit-user.component.html',
+  styleUrls: ['./edit-user.component.scss']
 })
-export class GarageModifyComponent implements OnInit {
-  
-  public garage: GarageJsonld|null = null;
+export class EditUserComponent implements OnInit {
+
+  public user: UserJsonld|null = null;
 
   public violationList: ConstraintViolationList|null = null;
 
@@ -26,9 +26,9 @@ export class GarageModifyComponent implements OnInit {
     // Retrieve params from path URL (defined in app-routing.module.ts).
     this.activatedRoute.params.subscribe((params) => {
       // params.YOUR_VAR
-      this.httpClient.get<GarageJsonld>('https://hb-bc-dwwm-2020.deploy.this-serv.com/api/garages/' + params.id).subscribe({
-        next: (garage: GarageJsonld) => {
-          this.garage = garage;
+      this.httpClient.get<UserJsonld>('https://hb-bc-dwwm-2020.deploy.this-serv.com/api/users/' + params.id).subscribe({
+        next: (user: UserJsonld) => {
+          this.user = user;
         },
         error: (err: HttpErrorResponse) => {
           // You have to handle error better than this ;) .
@@ -38,10 +38,10 @@ export class GarageModifyComponent implements OnInit {
     });
   }
 
-  public submit(garage: Garage): void {
-    this.httpClient.put<GarageJsonld>('https://hb-bc-dwwm-2020.deploy.this-serv.com/api/garages/' + this.garage?.id, garage).subscribe({
-      next: (createdGarage) => {
-        this.router.navigate(['/garage-list']);
+  public submit(user: User): void {
+    this.httpClient.put<UserJsonld>('https://hb-bc-dwwm-2020.deploy.this-serv.com/api/users/' + this.user?.id, user).subscribe({
+      next: (createdUser) => {
+        this.router.navigate(['/users/list']);
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 422) {
@@ -52,5 +52,4 @@ export class GarageModifyComponent implements OnInit {
       },
     });
   }
-
 }

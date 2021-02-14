@@ -1,26 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {GarageCollection} from '../models/garage-collection';
-import {GarageJsonld} from '../models/garage-jsonld';
-import {GarageCollectionFilter} from '../models/garage-collection-filter';
+import {UserCollection} from '../../models/user-collection';
+import {UserJsonld} from '../../models/user-jsonld';
+import {UserCollectionFilter} from '../../models/user-collection-filter';
 
 @Component({
-  selector: 'app-garage-list',
-  templateUrl: './garage-list.component.html',
-  styleUrls: ['./garage-list.component.scss']
+  selector: 'app-list-users',
+  templateUrl: './list-users.component.html',
+  styleUrls: ['./list-users.component.scss']
 })
-export class GarageListComponent implements OnInit {
+export class ListUsersComponent implements OnInit {
 
-  public garages: Array<GarageJsonld> = [];
+  public users: Array<UserJsonld> = [];
 
   public prevLink: string|null = null;
   public nextLink: string|null = null;
 
   public lastPage: number|null = null;
 
-  public filters: GarageCollectionFilter = {
-    name: '',
-    city: '',
+  public filters: UserCollectionFilter = {
+    email: '',
+    lastName: '',
   };
 
   constructor(
@@ -28,18 +28,18 @@ export class GarageListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loadPage('/api/garages?page=1');
+    this.loadPage('/api/users?page=1');
   }
 
   public applyFilters(page: number = 1): void {
-    let url = '/api/garages?page=' + page;
+    let url = '/api/users?page=' + page;
 
     // Object.keys(this.filters) => ['email', 'lastName', 'bsrasrui']
     // Object.keys get an array of all attribute's name from a given object.
     for (const key of Object.keys(this.filters)) {
       // You can access an object's attribute with an array syntax like.
       if (key in this.filters) {
-        const val = this.filters[key as keyof GarageCollectionFilter];
+        const val = this.filters[key as keyof UserCollectionFilter];
 
         if (val !== '') {
           url += '&' + key + '=' + val;
@@ -64,7 +64,7 @@ export class GarageListComponent implements OnInit {
 
   public loadPageByNumber(pageNumber: number): void {
     this.applyFilters(pageNumber);
-    // this.loadPage('/api/garages?page=' + pageNumber);
+    // this.loadPage('/api/users?page=' + pageNumber);
   }
 
   public get getPageNumbers(): Array<number> {
@@ -80,8 +80,8 @@ export class GarageListComponent implements OnInit {
   }
 
   private loadPage(page: string): void {
-    this.httpClient.get<GarageCollection>('https://hb-bc-dwwm-2020.deploy.this-serv.com' + page).subscribe((data) => {
-      this.garages = data['hydra:member'];
+    this.httpClient.get<UserCollection>('https://hb-bc-dwwm-2020.deploy.this-serv.com' + page).subscribe((data) => {
+      this.users = data['hydra:member'];
 
       if (data['hydra:view']['hydra:next'] === undefined) {
         this.nextLink = null;
@@ -114,5 +114,4 @@ export class GarageListComponent implements OnInit {
       }
     });
   }
-
 }
